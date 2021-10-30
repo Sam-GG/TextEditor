@@ -1,0 +1,29 @@
+.text-area .content{
+    -fx-background-color: rgba(11,8,18, 0.95);
+
+}
+.text-area{
+    -fx-text-fill: rgba(233,236,226, 1);
+}
+
+.text-field{
+    -fx-text-fill: rgba(233,236,226, 1);
+    -fx-background-color: rgba(11,8,18, 0.95);
+}
+
+.text-field .content{
+    -fx-background-color: rgba(11,8,18, 0.95);
+}
+
+.border-pane .content{
+    -fx-background-color: rgba(11,8,18, 0.95);
+}
+
+.tool-bar{
+    -fx-background-color: rgba(11,8,18, 0.95);
+}
+
+.button{
+    -fx-background-color: rgba(14,10,25, 1);
+    -fx-text-fill: rgba(233,236,226, 1);
+}
