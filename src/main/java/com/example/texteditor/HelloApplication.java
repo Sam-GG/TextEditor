@@ -9,10 +9,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -49,8 +47,7 @@ public class HelloApplication extends Application {
 
         BorderPane root = new BorderPane();
 
-        root.setStyle("-fx-background-color: rgba(11,8,18,0.9)");
-        root.setPadding(new Insets(2, 2, 2, 2));
+        root.setPadding(new Insets(4, 4, 4, 4));
         notepad = new TextArea();
         notepad.setPrefSize(400, 250);
         notepad.setMinSize(100, 100);
@@ -74,7 +71,6 @@ public class HelloApplication extends Application {
 
         root.setTop(borderPane);
         root.setCenter(notepad);
-
         Scene scene = new Scene(root);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination keyComb = new KeyCodeCombination(KeyCode.S,
@@ -104,6 +100,8 @@ public class HelloApplication extends Application {
 
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("BigMan's editor");
+        scene.setFill(Color.TRANSPARENT);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         ResizeHelper.addResizeListener(stage);
         stage.show();
