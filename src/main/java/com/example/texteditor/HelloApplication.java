@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -46,31 +47,34 @@ public class HelloApplication extends Application {
 
         borderPane.setTop(toolBar);
 
-        VBox root = new VBox();
+        BorderPane root = new BorderPane();
 
         root.setStyle("-fx-background-color: rgba(11,8,18,0.9)");
+        root.setPadding(new Insets(2, 2, 2, 2));
         notepad = new TextArea();
         notepad.setPrefSize(400, 250);
         notepad.setMinSize(100, 100);
         notepad.setMaxSize(1920, 1080);
-        notepad.isResizable();
-        root.getChildren().addAll(borderPane, notepad);
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+        borderPane.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 xOffset = event.getSceneX();
                 yOffset = event.getSceneY();
-                System.out.println(xOffset);
             }
         });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+        borderPane.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println(xOffset);
                 stage.setX(event.getScreenX() - xOffset);
                 stage.setY(event.getScreenY() - yOffset);
             }
         });
+
+
+        root.setTop(borderPane);
+        root.setCenter(notepad);
+
         Scene scene = new Scene(root);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination keyComb = new KeyCodeCombination(KeyCode.S,
@@ -101,6 +105,7 @@ public class HelloApplication extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("BigMan's editor");
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
         stage.show();
     }
 
