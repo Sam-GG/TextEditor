@@ -47,7 +47,7 @@ public class HelloApplication extends Application {
 
         BorderPane root = new BorderPane();
 
-        root.setPadding(new Insets(4, 4, 4, 4));
+        root.setPadding(new Insets(7, 7, 7, 7));
         notepad = new TextArea();
         notepad.setPrefSize(400, 250);
         notepad.setMinSize(100, 100);

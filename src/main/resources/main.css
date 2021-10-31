@@ -2,10 +2,10 @@
 
 .text-area .content{
     -fx-background-color: rgba(11,8,18, 0.95);
-
 }
 .text-area{
     -fx-text-fill: rgba(233,236,226, 1);
+    -fx-font-size: 15;
 }
 
 .text-field{
