@@ -33,6 +33,7 @@ public class HelloApplication extends Application {
 //        add file list viewer
 //        see if you can style the top window bar sleeker
         BorderPane borderPane = new BorderPane();
+//        borderPane.setStyle("-fx-background-color: black");
 //        borderPane.setStyle("-fx-background-color: green;");
         title = new Label("Big Man's editor");
         title.setStyle("-fx-text-fill: rgba(233,236,226, 0.95);-fx-font-family: 'Bauhaus 93';-fx-font-size: 16");
@@ -132,9 +133,10 @@ public class HelloApplication extends Application {
 
     public void openSaveDialog(Stage stage){
 
-        HBox root = new HBox();
-        root.setSpacing(3);
-        root.setPadding(new Insets(5, 5, 5, 5));
+        HBox popupRoot = new HBox();
+        popupRoot.setStyle("-fx-background-color: rgba(32,10,44, 0.97)");
+        popupRoot.setSpacing(3);
+        popupRoot.setPadding(new Insets(5, 5, 5, 5));
         TextField saveName = new TextField();
         Button save = new Button("Save");
         save.setOnMouseClicked(e -> {
@@ -149,8 +151,8 @@ public class HelloApplication extends Application {
             }
         });
 
-        root.getChildren().addAll(saveName, save);
-        Scene scene = new Scene(root);
+        popupRoot.getChildren().addAll(saveName, save);
+        Scene scene = new Scene(popupRoot);
         popup = new Stage();
         popup.initStyle(StageStyle.UNDECORATED);
         scene.getStylesheets().add("main.css");
