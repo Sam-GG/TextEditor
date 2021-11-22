@@ -58,3 +58,12 @@
     -fx-background-color: rgba(14,10,25, 1);
     -fx-text-fill: rgba(233,236,226, 1);
 }
+
+.list-view .list-cell:even {
+    -fx-background-color: rgba(11,8,18, 0.95);
+    -fx-text-fill: rgba(233,236,226, 1);
+}
+.list-view .list-cell:odd {
+    -fx-background-color: rgba(11,8,18, 0.95);
+    -fx-text-fill: rgba(233,236,226, 1);
+}

@@ -2,9 +2,10 @@ package com.example.texteditor;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,8 +19,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class HelloApplication extends Application {
+public class TextEditor extends javafx.application.Application {
     public double xOffset = 0;
     public double yOffset = 0;
 
@@ -27,14 +30,12 @@ public class HelloApplication extends Application {
     String currentFileName = null;
     Label title;
     Stage popup;
+    boolean fileViewerOpen = false;
+    private ListView<String> fileList;
+
     @Override
     public void start(Stage stage) throws IOException {
-//        Add css dark styling
-//        add file list viewer
-//        see if you can style the top window bar sleeker
         BorderPane borderPane = new BorderPane();
-//        borderPane.setStyle("-fx-background-color: black");
-//        borderPane.setStyle("-fx-background-color: green;");
         title = new Label("Big Man's editor");
         title.setStyle("-fx-text-fill: rgba(233,236,226, 0.95);-fx-font-family: 'Bauhaus 93';-fx-font-size: 16");
         ToolBar toolBar = new ToolBar();
@@ -94,10 +95,44 @@ public class HelloApplication extends Application {
                 }
             }
         });
+
+        //Duplicate current line in text area
+        notepad.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination keyComb = new KeyCodeCombination(KeyCode.D,
+                    KeyCombination.CONTROL_DOWN);
+            public void handle(KeyEvent ke) {
+                if (keyComb.match(ke)) {
+                    System.out.println("Key Pressed: " + keyComb);
+                    String currentLine = notepad.getSelectedText();
+                    notepad.appendText(currentLine);
+//                    ke.consume(); // <-- stops passing the event to next node
+                }
+            }
+        });
+
+        fileList = createFileList();
+
+        //make file list viewer only visible on keyboard input
+        notepad.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination keyComb = new KeyCodeCombination(KeyCode.F,
+                    KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+            public void handle(KeyEvent ke) {
+                if (keyComb.match(ke)) {
+                    System.out.println("Key Pressed: " + keyComb);
+                    if (fileViewerOpen) {
+                        root.getChildren().remove(fileList);
+                        fileViewerOpen = false;
+                    } else {
+                        fileList.setItems(getFileList());
+                        root.setRight(fileList);
+                        fileViewerOpen = true;
+                    }
+                    ke.consume(); // <-- stops passing the event to next node
+                }
+            }
+        });
+
         scene.getStylesheets().add("main.css");
-//        scene.getStylesheets().add(getClass().getResource("/main.css").toExternalForm());
-
-
 
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("BigMan's editor");
@@ -106,6 +141,28 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         ResizeHelper.addResizeListener(stage);
         stage.show();
+    }
+
+
+    private String readFile(String fileName) {
+        try {
+            return new String(Files.readAllBytes(Paths.get(fileName)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private ObservableList<String> getFileList() {
+        ObservableList<String> fileList = FXCollections.observableArrayList();
+        File folder = new File(".");
+        File[] listOfFiles = folder.listFiles();
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                fileList.add(file.getName());
+            }
+        }
+        return fileList;
     }
 
     class WindowButtons extends HBox {
@@ -125,9 +182,30 @@ public class HelloApplication extends Application {
         }
     }
 
+    public ListView<String> createFileList() {
+        //create file list viewer
+        ListView<String> fileList = new ListView<>();
+        fileList.setPrefSize(200, 250);
+        fileList.setMinSize(100, 100);
+        fileList.setMaxSize(1920, 1080);
+        fileList.setItems(getFileList());
+        fileList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    String fileName = fileList.getSelectionModel().getSelectedItem();
+                    notepad.setText(readFile(fileName));
+                }
+            }
+        });
+        fileList.setStyle("-fx-background-color: rgba(0,0,0,0.5);-fx-text-fill: rgba(233,236,226, 0.95);-fx-font-size: 15");
+        return fileList;
+    }
+
     public void saveFile(String name, String text) throws FileNotFoundException {
         try (PrintWriter out = new PrintWriter(name+".txt")) {
             out.println(text);
+            fileList.setItems(getFileList());
         }
     }
 
@@ -154,6 +232,17 @@ public class HelloApplication extends Application {
         popupRoot.getChildren().addAll(saveName, save);
         Scene scene = new Scene(popupRoot);
         popup = new Stage();
+        popup.setX(stage.getX() + stage.getWidth() / 2 - 100);
+        popup.setY(stage.getY() + stage.getHeight() / 2 - 100);
+        popup.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination keyComb = new KeyCodeCombination(KeyCode.ESCAPE);
+            public void handle(KeyEvent ke) {
+                if (keyComb.match(ke)) {
+                    popup.close();
+                    ke.consume(); // <-- stops passing the event to next node
+                }
+            }
+        });
         popup.initStyle(StageStyle.UNDECORATED);
         scene.getStylesheets().add("main.css");
         popup.setScene(scene);
