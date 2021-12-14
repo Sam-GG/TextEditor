@@ -1,6 +1,5 @@
 package com.example.texteditor;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +21,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+//This code should probably be refactored to follow MVC lol
+//TODO: extract classes and make them more readable
 public class TextEditor extends javafx.application.Application {
     public double xOffset = 0;
     public double yOffset = 0;
@@ -69,7 +70,6 @@ public class TextEditor extends javafx.application.Application {
                 stage.setY(event.getScreenY() - yOffset);
             }
         });
-
 
         root.setTop(borderPane);
         root.setCenter(notepad);
