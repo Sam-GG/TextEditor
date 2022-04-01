@@ -1,9 +1,5 @@
 package com.example.texteditor;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,13 +9,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 
 //This code should probably be refactored to follow MVC lol
 //TODO: extract classes and make them more readable
@@ -142,24 +135,6 @@ public class TextEditor extends javafx.application.Application {
         ResizeHelper.addResizeListener(stage);
         stage.show();
     }
-
-    class WindowButtons extends HBox {
-
-        public WindowButtons() {
-            Button closeBtn = new Button("X");
-
-            closeBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    Platform.exit();
-                }
-            });
-
-            this.getChildren().add(closeBtn);
-        }
-    }
-
 
     public void saveFile(String name, String text) throws FileNotFoundException {
         try (PrintWriter out = new PrintWriter(name+".txt")) {
