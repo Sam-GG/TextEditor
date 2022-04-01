@@ -32,7 +32,7 @@ public class TextEditor extends javafx.application.Application {
     Label title;
     Stage popup;
     boolean fileViewerOpen = false;
-    private ListView<String> fileList;
+    private FileView fileList;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -110,7 +110,7 @@ public class TextEditor extends javafx.application.Application {
             }
         });
 
-        fileList = createFileList();
+        fileList = new FileView(this);
 
         //make file list viewer only visible on keyboard input
         notepad.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -123,7 +123,7 @@ public class TextEditor extends javafx.application.Application {
                         root.getChildren().remove(fileList);
                         fileViewerOpen = false;
                     } else {
-                        fileList.setItems(getFileList());
+                        fileList.updateFileList();
                         root.setRight(fileList);
                         fileViewerOpen = true;
                     }
@@ -143,28 +143,6 @@ public class TextEditor extends javafx.application.Application {
         stage.show();
     }
 
-
-    private String readFile(String fileName) {
-        try {
-            return new String(Files.readAllBytes(Paths.get(fileName)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    private ObservableList<String> getFileList() {
-        ObservableList<String> fileList = FXCollections.observableArrayList();
-        File folder = new File(".");
-        File[] listOfFiles = folder.listFiles();
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                fileList.add(file.getName());
-            }
-        }
-        return fileList;
-    }
-
     class WindowButtons extends HBox {
 
         public WindowButtons() {
@@ -182,30 +160,11 @@ public class TextEditor extends javafx.application.Application {
         }
     }
 
-    public ListView<String> createFileList() {
-        //create file list viewer
-        ListView<String> fileList = new ListView<>();
-        fileList.setPrefSize(200, 250);
-        fileList.setMinSize(100, 100);
-        fileList.setMaxSize(1920, 1080);
-        fileList.setItems(getFileList());
-        fileList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2) {
-                    String fileName = fileList.getSelectionModel().getSelectedItem();
-                    notepad.setText(readFile(fileName));
-                }
-            }
-        });
-        fileList.setStyle("-fx-background-color: rgba(0,0,0,0.5);-fx-text-fill: rgba(233,236,226, 0.95);-fx-font-size: 15");
-        return fileList;
-    }
 
     public void saveFile(String name, String text) throws FileNotFoundException {
         try (PrintWriter out = new PrintWriter(name+".txt")) {
             out.println(text);
-            fileList.setItems(getFileList());
+            fileList.updateFileList();
         }
     }
 
