@@ -25,7 +25,3 @@ This is a lightweight text editor application built using JavaFX that allows use
 6.  Double click any filename to instantly switch to editing that file instead
 7.  Hide file-viewer with CTRL+SHIFT+F again
 7.  Standard copy, paste, select-all, undo & redo keyboard shortcuts
-
-### Licensing
-
-This project is licensed under the [MIT License](https://github.com/Sam-GG/TextEditor/blob/main/LICENSE)
